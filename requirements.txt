@@ -1,0 +1,4 @@
+python-dotenv
+datasets
+scikit-learn
+transformers
