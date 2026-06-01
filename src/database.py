@@ -1,7 +1,7 @@
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
 from src.helpers.config import get_settings
-from src.helpers.data_helpers import load_embeddings_model
+from src.helpers.data_helpers import load_embedding_model
 
 settings = get_settings()
 
@@ -11,7 +11,7 @@ def get_vector_store() -> QdrantVectorStore:
         api_key=settings.QDRANT_API_KEY
     )
 
-    embeddings = load_embeddings_model()
+    embeddings = load_embedding_model()
     
     return QdrantVectorStore(
         client=client,

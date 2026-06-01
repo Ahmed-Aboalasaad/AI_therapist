@@ -2,7 +2,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import os
 
 class Settings(BaseSettings):
-
     GROQ_API_KEY: str
     GROQ_MODEL_NAME: str
 
@@ -15,7 +14,6 @@ class Settings(BaseSettings):
     VECTOR_SIZE: int
 
     CLEANED_DATA_PATH: str
-
 
 
     class Config:

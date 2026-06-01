@@ -22,8 +22,7 @@ def convert_df_to_documents(df: pd.DataFrame) -> list[Document]:
 
 
 
-def load_embeddings_model() -> HuggingFaceEmbeddings:
-
+def load_embedding_model() -> HuggingFaceEmbeddings:
     MODEL_LOCAL_PATH = settings.MODEL_LOCAL_PATH
     HUGGINGFACE_HUB_MODEL = settings.HUGGINGFACE_HUB_MODEL
 
@@ -31,7 +30,7 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
     
     if os.path.exists(local_weight_file):
         print(f"Found local Embedding Model offline at: '{MODEL_LOCAL_PATH}'. Loading directly...")
-        embeddings = HuggingFaceEmbeddings(
+        embedding_model = HuggingFaceEmbeddings(
             model_name=MODEL_LOCAL_PATH,
             model_kwargs={'device': 'cuda'} 
         )
@@ -42,7 +41,7 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
 
         os.makedirs(MODEL_LOCAL_PATH, exist_ok=True)
         
-        embeddings = HuggingFaceEmbeddings(
+        embedding_model = HuggingFaceEmbeddings(
             model_name=HUGGINGFACE_HUB_MODEL,
             cache_folder=os.path.dirname(MODEL_LOCAL_PATH),
             model_kwargs={'device': 'cuda'} 
@@ -51,4 +50,4 @@ def load_embeddings_model() -> HuggingFaceEmbeddings:
         print(f"Model downloaded successfully and cached locally!")
 
 
-    return embeddings
+    return embedding_model

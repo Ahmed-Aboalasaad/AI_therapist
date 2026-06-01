@@ -1,0 +1,10 @@
+python-dotenv
+datasets
+scikit-learn
+transformers
+qdrant-client
+langchain
+langchain-groq
+langchain_qdrant
+langchain_huggingface
+pydantic_settings

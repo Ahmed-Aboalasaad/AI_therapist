@@ -3,23 +3,20 @@ import pandas as pd
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams
 from langchain_qdrant import QdrantVectorStore
-from langchain_core.documents import Document
 
 
 from src.data_pipeline.data_preprocessing import run_preprocessing
 from src.helpers.config import get_settings
-from src.helpers.data_helpers import load_embeddings_model, convert_df_to_documents
+from src.helpers.data_helpers import load_embedding_model, convert_df_to_documents
 
 settings = get_settings()
-
-
 
 def ingest_data():
     print("Base Pipeline Core initialized.")
 
     run_preprocessing()
 
-    embeddings = load_embeddings_model()
+    embeddings = load_embedding_model()
 
     print("\nConnecting to Qdrant Database...")
     client = QdrantClient(

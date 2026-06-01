@@ -7,12 +7,10 @@ settings = get_settings()
 
 
 def clean_text(text: str) -> str:
-
     if not isinstance(text, str):
         return ""
     text = re.sub(re.compile(r'[\s\r\n\t]+'), ' ', text)
     return text.strip()
-
 
 def fetch_and_prepare_data() -> pd.DataFrame:
     print("Loading dataset from Hugging Face Hub...")
@@ -33,8 +31,6 @@ def process_and_group_data(df: pd.DataFrame) -> pd.DataFrame:
     
     grouped_df.rename(columns={"cleaned_Context": "Context", "cleaned_Response": "Response"}, inplace=True)
     return grouped_df
-
-
 
 def run_preprocessing():
     print("Checking Data Preprocessing Status...")
