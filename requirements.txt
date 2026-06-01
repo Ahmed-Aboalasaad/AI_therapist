@@ -8,3 +8,5 @@ langchain-groq
 langchain_qdrant
 langchain_huggingface
 pydantic_settings
+groq
+instructor
