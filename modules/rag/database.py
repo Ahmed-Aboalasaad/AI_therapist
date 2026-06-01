@@ -1,7 +1,7 @@
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
-from src.helpers.config import get_settings
-from src.helpers.data_helpers import load_embedding_model
+from helpers.config import get_settings
+from helpers.data_helpers import load_embedding_model
 
 settings = get_settings()
 

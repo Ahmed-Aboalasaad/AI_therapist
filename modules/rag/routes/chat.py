@@ -2,7 +2,7 @@ import asyncio
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from src.chains import get_mental_health_chain
+from modules.rag.chains import get_mental_health_chain
 
 router = APIRouter(
     prefix="/api",

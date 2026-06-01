@@ -3,9 +3,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from src.helpers.config import get_settings
-from src.database import get_retriever
-from src.prompts import MENTAL_HEALTH_SYSTEM_PROMPT
+from helpers.config import get_settings
+from database import get_retriever
+from prompts import MENTAL_HEALTH_SYSTEM_PROMPT
 
 settings = get_settings()
 

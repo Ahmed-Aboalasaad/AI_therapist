@@ -2,7 +2,7 @@ import os
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 import pandas as pd
-from src.helpers.config import get_settings
+from config import get_settings
 settings = get_settings()
 
 

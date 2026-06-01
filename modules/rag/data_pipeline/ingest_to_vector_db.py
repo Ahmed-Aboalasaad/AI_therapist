@@ -5,9 +5,9 @@ from qdrant_client.models import Distance, VectorParams
 from langchain_qdrant import QdrantVectorStore
 
 
-from src.data_pipeline.data_preprocessing import run_preprocessing
-from src.helpers.config import get_settings
-from src.helpers.data_helpers import load_embedding_model, convert_df_to_documents
+from data_preprocessing import run_preprocessing
+from modules.rag.helpers.config import get_settings
+from modules.rag.helpers.data_helpers import load_embedding_model, convert_df_to_documents
 
 settings = get_settings()
 
