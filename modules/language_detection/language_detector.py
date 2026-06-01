@@ -1,10 +1,16 @@
 '''Best Lanaguage Detector using TF/IDF vectorizer and SVM'''
 
-class CharNGramSVMDetector():
-    def __init__(self, model_path="models/language_detector_svm.joblib"):
-        if model_path:
+class LanguageDetector():
+    '''
+    Best Language Detector in the experiments done in notebooks/language_detection.ipynb
+    Uses an N-gram character TF/IDF vectorizer and a Linear SVM classifier.'''
+
+    def __init__(self, model_name="char_n-Gram_svm.joblib"):
+        if model_name:
             import joblib
-            self.pipeline = joblib.load(model_path)
+            from pathlib import Path
+            BASE_DIR = Path(__file__).parent
+            self.pipeline = joblib.load(BASE_DIR / "models" / model_name)
         else:
             from sklearn.pipeline import Pipeline
             from sklearn.feature_extraction.text import TfidfVectorizer

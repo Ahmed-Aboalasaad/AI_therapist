@@ -11,4 +11,4 @@ __pycache__/
 .env
 
 # Large Files
-*/models/*
+*.joblib
