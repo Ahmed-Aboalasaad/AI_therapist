@@ -1,9 +1,14 @@
+# Requirements
 .venv/
 shared_dev_env/
 
+# Cache
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
+# Configurations
 .env
 
+# Large Files
+*/models/*
