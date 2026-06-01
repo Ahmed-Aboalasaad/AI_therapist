@@ -1,3 +1,33 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-models/*
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments and Secrets
 .env
+.venv
+env/
+venv/
+ENV/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Project specific model/data paths
+models/*
+saved_model/
+*.h5
+*.pkl
+*.pb
+*.onnx
+*.pt
+*.pth
