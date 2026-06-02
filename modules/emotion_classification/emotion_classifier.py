@@ -1,13 +1,8 @@
 import torch
 import torch.nn.functional as F
 
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSequenceClassification
-)
-
-from .config import MODEL_PATH, MAX_LENGTH
-from .emotion_mapping import EMOTION_MAP
+from . import MODEL_PATH, MAX_LENGTH, EMOTION_MAP
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 class EmotionClassifier:

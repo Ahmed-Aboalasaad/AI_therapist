@@ -1,16 +1,15 @@
 import logging
-from typing import Dict, Any
 
 from . import *
+from typing import Dict, Any
 from modules.translation.translator import GroqTranslator
+from modules.emotion_classification.emotion_classifier import EmotionClassifier
 from modules.intent_classification.intent_classifier import classify_user_intent
-from modules.emotion_classification.classifier import EmotionClassifier
 from modules.rag.chains import get_RAG_chain
 from modules.language_detection.language_detector import LanguageDetector
 
 
 logger = logging.getLogger(__name__)
-
 
 class QueryHandler:
     def __init__(self):
