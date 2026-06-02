@@ -55,6 +55,29 @@ class GroqTranslator:
             # Fallback in case of JSON parse error
             return TranslationResponse(source_language="Unknown", translated_text=text)
 
+    def translate_to_english(self, text: str, source_language: str) -> str:
+        """
+        Translates text from source_language to English.
+        """
+        if not text.strip() or source_language.lower() == "english" or source_language.lower() == "en":
+            return text
+
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        f"You are a professional translator.\n"
+                        f"Translate the user's {source_language} text into English.\n"
+                        f"Do NOT include any introduction, explanations, or quotes. Output ONLY the translated text."
+                    )
+                },
+                {"role": "user", "content": text}
+            ]
+        )
+        return response.choices[0].message.content.strip()
+
     def translate_back(self, text: str, target_language: str) -> str:
         """
         Translates the English response back to the target language (e.g. Arabic).

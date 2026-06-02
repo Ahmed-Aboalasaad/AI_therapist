@@ -22,7 +22,13 @@ def convert_df_to_documents(df: pd.DataFrame) -> list[Document]:
 
 
 
+_embedding_model = None
+
 def load_embedding_model() -> HuggingFaceEmbeddings:
+    global _embedding_model
+    if _embedding_model is not None:
+        return _embedding_model
+
     import torch
     device = "cuda" if torch.cuda.is_available() else "cpu"
     
@@ -52,5 +58,5 @@ def load_embedding_model() -> HuggingFaceEmbeddings:
 
         print(f"Model downloaded successfully and cached locally!")
 
-
-    return embedding_model
+    _embedding_model = embedding_model
+    return _embedding_model

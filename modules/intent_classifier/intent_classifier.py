@@ -18,7 +18,7 @@ class IntentResponse(BaseModel):
 
 def classify_user_intent(user_query:str)->IntentResponse:
     response = client.chat.completions.create(
-        model = "meta-llama/llama-4-scout-17b-16e-instruct",
+        model = "openai/gpt-oss-120b",
         response_model= IntentResponse,
         messages=[
          {
@@ -40,4 +40,5 @@ def classify_user_intent(user_query:str)->IntentResponse:
             {"role": "user", "content": user_query}
         ]
     )
+    #print(response)
     return response

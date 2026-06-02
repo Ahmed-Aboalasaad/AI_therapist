@@ -5,6 +5,30 @@ from modules.translation.translator import GroqTranslator
 from modules.intent_classifier.intent_classifier import classify_user_intent
 from modules.emotion_classifier.classifier import EmotionClassifier
 from modules.rag.chains import get_mental_health_chain
+from modules.language_detection.language_detector import LanguageDetector
+
+LANG_MAP = {
+    "ar": "Arabic",
+    "bg": "Bulgarian",
+    "de": "German",
+    "el": "Greek",
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "hi": "Hindi",
+    "it": "Italian",
+    "ja": "Japanese",
+    "nl": "Dutch",
+    "pl": "Polish",
+    "pt": "Portuguese",
+    "ro": "Romanian",
+    "ru": "Russian",
+    "sw": "Swahili",
+    "th": "Thai",
+    "tr": "Turkish",
+    "vi": "Vietnamese",
+    "zh": "Chinese"
+}
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +55,7 @@ class FlowOrchestrator:
 
         self.translator = GroqTranslator()
         self.emotion_classifier = EmotionClassifier()
+        self.language_detector = LanguageDetector()
 
         # Single RAG chain (Retriever + Prompt + LLM)
         self.mental_health_chain = get_mental_health_chain()
@@ -47,18 +72,22 @@ class FlowOrchestrator:
             }
 
         # --------------------------------------------------
-        # Step 1: Detect Language + Translate to English
+        # Step 1: Detect Language (using local SVM detector)
         # --------------------------------------------------
         logger.info(
-            f"Detecting language and translating: '{user_query}'"
+            f"Detecting language for: '{user_query}'"
         )
+        pred_langs = self.language_detector.predict([user_query])
+        detected_code = pred_langs[0] if len(pred_langs) > 0 else "en"
+        source_lang = LANG_MAP.get(detected_code.lower(), detected_code)
 
-        translation_res = self.translator.detect_and_translate(
-            user_query
+        # --------------------------------------------------
+        # Step 1b: Translate to English (using translator only)
+        # --------------------------------------------------
+        logger.info(
+            f"Translating {source_lang} to English: '{user_query}'"
         )
-
-        source_lang = translation_res.source_language
-        english_query = translation_res.translated_text
+        english_query = self.translator.translate_to_english(user_query, source_lang)
 
         logger.info(
             f"Language: {source_lang} | Query: {english_query}"
@@ -70,7 +99,7 @@ class FlowOrchestrator:
         emotion_res = self.emotion_classifier.predict(
             english_query
         )
-
+        #print(emotion_res)
         emotion = emotion_res["emotion"]
         emotion_confidence = emotion_res["confidence"]
 
@@ -80,7 +109,7 @@ class FlowOrchestrator:
         intent_res = classify_user_intent(
             english_query
         )
-        # print(intent_res)
+        #print(intent_res)
         intent = intent_res.intent
 
         logger.info(
