@@ -2,7 +2,7 @@ import os
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 import pandas as pd
-from config import get_settings
+from modules.rag.helpers.config import get_settings
 settings = get_settings()
 
 
@@ -23,6 +23,9 @@ def convert_df_to_documents(df: pd.DataFrame) -> list[Document]:
 
 
 def load_embedding_model() -> HuggingFaceEmbeddings:
+    import torch
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    
     MODEL_LOCAL_PATH = settings.MODEL_LOCAL_PATH
     HUGGINGFACE_HUB_MODEL = settings.HUGGINGFACE_HUB_MODEL
 
@@ -32,7 +35,7 @@ def load_embedding_model() -> HuggingFaceEmbeddings:
         print(f"Found local Embedding Model offline at: '{MODEL_LOCAL_PATH}'. Loading directly...")
         embedding_model = HuggingFaceEmbeddings(
             model_name=MODEL_LOCAL_PATH,
-            model_kwargs={'device': 'cuda'} 
+            model_kwargs={'device': device} 
         )
 
     else:
@@ -44,7 +47,7 @@ def load_embedding_model() -> HuggingFaceEmbeddings:
         embedding_model = HuggingFaceEmbeddings(
             model_name=HUGGINGFACE_HUB_MODEL,
             cache_folder=os.path.dirname(MODEL_LOCAL_PATH),
-            model_kwargs={'device': 'cuda'} 
+            model_kwargs={'device': device} 
         )
 
         print(f"Model downloaded successfully and cached locally!")

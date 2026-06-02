@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MindSupport - Mental Health Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar Ambient Decor (hidden on mobile) -->
+      <div class="ambient-decor"></div>
+
+      <!-- Main Chat Wrapper -->
+      <div class="chat-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+          <div class="logo-area">
+            <div class="logo-icon">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M12 6V18M8 8H16M9 12H15M10 16H14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="logo-text">
+              <h1>Ai Therapist</h1>
+              <p>Mental Health Assistant</p>
+            </div>
+          </div>
+          <div class="header-actions">
+            <button
+              id="theme-toggle"
+              class="btn-icon"
+              aria-label="Toggle Theme"
+            >
+              <i class="fa-solid fa-moon"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- Chat Message Area -->
+        <main class="chat-history" id="chat-history">
+          <div class="date-divider">Today</div>
+
+          <!-- Welcome Message -->
+          <div class="message-row bot-row">
+            <div class="avatar bot-avatar">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div class="message-card-wrapper">
+              <div class="message-card">
+                <p>
+                  Hello! I am Ai Therapist, your supportive mental health
+                  assistant. How can I help you support your emotional or mental
+                  well-being today?
+                </p>
+              </div>
+              <div class="message-meta">
+                <span class="timestamp" id="welcome-timestamp">10:00 AM</span>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Input Area -->
+        <footer class="chat-input-area">
+          <form id="chat-form" class="chat-form">
+            <input
+              type="text"
+              id="message-input"
+              placeholder="Type your message..."
+              autocomplete="off"
+              required
+            />
+            <button
+              type="submit"
+              id="send-btn"
+              class="btn-send"
+              aria-label="Send Message"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </form>
+          <div class="disclaimer-text">
+            This is not a substitute for professional help. If you are in
+            crisis, please seek immediate assistance.
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

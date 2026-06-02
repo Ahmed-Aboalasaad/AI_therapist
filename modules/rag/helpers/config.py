@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     CLEANED_DATA_PATH: str
 
-
+    HF_TOKEN: str
     class Config:
         env_file = ".env"
 

@@ -1,15 +1,22 @@
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
-from helpers.config import get_settings
-from helpers.data_helpers import load_embedding_model
+from modules.rag.helpers.config import get_settings
+from modules.rag.helpers.data_helpers import load_embedding_model
 
 settings = get_settings()
 
 def get_vector_store() -> QdrantVectorStore:
-    client = QdrantClient(
-        url=settings.QDRANT_URL,
-        api_key=settings.QDRANT_API_KEY
-    )
+    url = settings.QDRANT_URL
+    if url.startswith("http://") or url.startswith("https://"):
+        client = QdrantClient(
+            url=url,
+            api_key=settings.QDRANT_API_KEY
+        )
+    elif url == ":memory:":
+        client = QdrantClient(location=":memory:")
+    else:
+        # Load local Qdrant directory
+        client = QdrantClient(path=url)
 
     embeddings = load_embedding_model()
     

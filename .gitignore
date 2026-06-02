@@ -1,14 +1,44 @@
-# Requirements
+# Virtual environment
 .venv/
+venv/
+ENV/
+env/
 shared_dev_env/
 
-# Cache
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebooks checkpoints
 .ipynb_checkpoints/
+*/.ipynb_checkpoints/*
 
-# Configurations
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Environment variables (secrets)
 .env
+.env.local
 
-# Large Files
+# Databases and Models (large files)
+models/
+qdrant_db/
 *.joblib
+*.pkl
+*.pb
+*.h5
+
+# Local logs and run caches
+*.log
