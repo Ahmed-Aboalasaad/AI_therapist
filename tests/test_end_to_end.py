@@ -24,7 +24,7 @@ mock_embeddings.embed_query.return_value = [0.1] * 384
 
 # Patch the load_embedding_model helper to return our mock
 with patch('modules.rag.helpers.data_helpers.load_embedding_model', return_value=mock_embeddings):
-    from app.services.orchestrator import FlowOrchestrator
+    from app.services.orchestrator import QueryHandler
     from modules.translation.translator import TranslationResponse
     from modules.intent_classifier.intent_classifier import IntentResponse
 
@@ -65,7 +65,7 @@ def test_orchestrator_flow():
          mock_chat_groq.return_value = mock_llm_instance
          
          # Initialize orchestrator
-         orchestrator = FlowOrchestrator()
+         orchestrator = QueryHandler()
          
          # Run the query
          result = orchestrator.process_query("أنا حزين وقلق جدا")

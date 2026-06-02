@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.schemas.requests import ChatRequest
 from app.schemas.responses import ChatResponse
-from app.services.orchestrator import FlowOrchestrator
+from app.services.orchestrator import QueryHandler
 
 router = APIRouter(
     prefix="/api",
@@ -10,7 +10,7 @@ router = APIRouter(
 
 # Instantiate the FlowOrchestrator once on startup to pre-load the models
 try:
-    orchestrator = FlowOrchestrator()
+    orchestrator = QueryHandler()
 except Exception as e:
     # We will log the error but not crash import time, so that uvicorn can load and show startup logs
     print(f"Error loading FlowOrchestrator: {e}")

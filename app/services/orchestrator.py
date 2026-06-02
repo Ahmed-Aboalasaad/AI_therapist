@@ -1,170 +1,111 @@
 import logging
 from typing import Dict, Any
 
+from constants import LANG_MAP, STATIC_RESPONSES
 from modules.translation.translator import GroqTranslator
 from modules.intent_classifier.intent_classifier import classify_user_intent
 from modules.emotion_classifier.classifier import EmotionClassifier
-from modules.rag.chains import get_mental_health_chain
+from modules.rag.chains import get_RAG_chain
 from modules.language_detection.language_detector import LanguageDetector
 
-LANG_MAP = {
-    "ar": "Arabic",
-    "bg": "Bulgarian",
-    "de": "German",
-    "el": "Greek",
-    "en": "English",
-    "es": "Spanish",
-    "fr": "French",
-    "hi": "Hindi",
-    "it": "Italian",
-    "ja": "Japanese",
-    "nl": "Dutch",
-    "pl": "Polish",
-    "pt": "Portuguese",
-    "ro": "Romanian",
-    "ru": "Russian",
-    "sw": "Swahili",
-    "th": "Thai",
-    "tr": "Turkish",
-    "vi": "Vietnamese",
-    "zh": "Chinese"
-}
 
 logger = logging.getLogger(__name__)
 
 
-STATIC_RESPONSES = {
-    "greeting":
-        "Hello! I'm here to support you. How are you feeling today?",
-
-    "goodbye":
-        "Take care of yourself. I'm always here if you need support in the future.",
-
-    "gratitude":
-        "You're very welcome. I'm glad I could support you today.",
-
-    "out_of_scope":
-        "I'm designed to help with mental health and emotional well-being. Feel free to share any thoughts, feelings, stress, or concerns you'd like to discuss."
-}
-
-
-class FlowOrchestrator:
-
+class QueryHandler:
     def __init__(self):
-        logger.info("Initializing FlowOrchestrator...")
+        logger.info("Initializing QueryHandler...")
 
         self.translator = GroqTranslator()
         self.emotion_classifier = EmotionClassifier()
         self.language_detector = LanguageDetector()
 
         # Single RAG chain (Retriever + Prompt + LLM)
-        self.mental_health_chain = get_mental_health_chain()
+        self.RAG_chain = get_RAG_chain()
 
-    def process_query(self, user_query: str) -> Dict[str, Any]:
-
-        if not user_query.strip():
+    def process_query(self, query: str) -> Dict[str, Any]:
+        if not query.strip():
             return {
                 "response": "Please enter a message.",
-                "detected_language": "English",
+                "language": "English",
                 "intent": "out_of_scope",
                 "emotion": "neutral",
                 "confidence": 1.0
             }
 
         # --------------------------------------------------
-        # Step 1: Detect Language (using local SVM detector)
+        # Step 1.1: Detect Language
         # --------------------------------------------------
         logger.info(
-            f"Detecting language for: '{user_query}'"
+            f"Detecting language"
         )
-        pred_langs = self.language_detector.predict([user_query])
-        detected_code = pred_langs[0] if len(pred_langs) > 0 else "en"
-        source_lang = LANG_MAP.get(detected_code.lower(), detected_code)
+        try:
+            lang = self.language_detector.predict([query])
+            detected_code = lang[0]
+        except Exception as e:
+            logger.error(f"Couldn't detect the language: {str(e)}")
+
+        try:
+            language = LANG_MAP[detected_code.lower()]
+        except KeyError:
+            logger.warning(f"Language code '{detected_code}' not found in LANG_MAP. Defaulting to English.")
+            language = "English"
+
 
         # --------------------------------------------------
-        # Step 1b: Translate to English (using translator only)
+        # Step 1.2: Translate to English (using translator only)
         # --------------------------------------------------
-        logger.info(
-            f"Translating {source_lang} to English: '{user_query}'"
-        )
-        english_query = self.translator.translate_to_english(user_query, source_lang)
+        if language != "English":
+            logger.info(f"Translating from {language}: '{query}'")
+            query = self.translator.translate_to_english(query, language)
+            logger.info(f"To English: {query}")
 
-        logger.info(
-            f"Language: {source_lang} | Query: {english_query}"
-        )
 
         # --------------------------------------------------
         # Step 2: Emotion Classification
         # --------------------------------------------------
-        emotion_res = self.emotion_classifier.predict(
-            english_query
-        )
-        #print(emotion_res)
+        emotion_res = self.emotion_classifier.predict(query)
         emotion = emotion_res["emotion"]
         emotion_confidence = emotion_res["confidence"]
+        logger.log(f"Emotion: {emotion} (confident: {emotion_confidence:.2f})%")
+
 
         # --------------------------------------------------
         # Step 3: Intent Classification
         # --------------------------------------------------
-        intent_res = classify_user_intent(
-            english_query
-        )
-        #print(intent_res)
-        intent = intent_res.intent
+        intent = classify_user_intent(query).intent
+        logger.info(f"Intent: {intent}")
 
-        logger.info(
-            f"Intent: {intent} | Emotion: {emotion}"
-        )
 
         # --------------------------------------------------
         # Step 4: Route Request
         # --------------------------------------------------
         if intent == "asking_mental_health_question":
-
-            logger.info(
-                "Running Mental Health RAG Chain"
-            )
-
-            english_response = (
-                self.mental_health_chain.invoke(
-                    english_query
-                )
-            )
-
+            logger.info("Running Mental Health RAG Chain")
+            response = self.RAG_chain.invoke(query) # Always in English
         else:
+            try:
+                response = STATIC_RESPONSES[intent]
+            except KeyError as e:
+                logger.error(f"Intent '{intent}' not found in STATIC_RESPONSES. Defaulting to 'out_of_scope' response.")
+                response = STATIC_RESPONSES["out_of_scope"]
 
-            english_response = STATIC_RESPONSES.get(
-                intent,
-                STATIC_RESPONSES["out_of_scope"]
-            )
 
         # --------------------------------------------------
         # Step 5: Translate Back
         # --------------------------------------------------
-        final_response = english_response
+        final_response = response
+        if language != "English":
+            logger.info(f"Translating response back to {language}")
+            final_response = self.translator.translate_back(response, language)
 
-        if source_lang.lower() != "english":
 
-            logger.info(
-                f"Translating response back to {source_lang}"
-            )
-
-            final_response = (
-                self.translator.translate_back(
-                    english_response,
-                    source_lang
-                )
-            )
-
-        # --------------------------------------------------
-        # Return Result
-        # --------------------------------------------------
         return {
             "response": final_response,
-            "detected_language": source_lang,
+            "language": language,
             "intent": intent,
             "emotion": emotion,
             "emotion_confidence": emotion_confidence,
-            "english_query": english_query,
-            "english_response": english_response
+            "english_query": query,
+            "english_response": response
         }
