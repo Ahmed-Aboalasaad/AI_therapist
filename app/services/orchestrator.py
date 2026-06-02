@@ -1,10 +1,10 @@
 import logging
 from typing import Dict, Any
 
-from constants import LANG_MAP, STATIC_RESPONSES
+from . import *
 from modules.translation.translator import GroqTranslator
-from modules.intent_classifier.intent_classifier import classify_user_intent
-from modules.emotion_classifier.classifier import EmotionClassifier
+from modules.intent_classification.intent_classifier import classify_user_intent
+from modules.emotion_classification.classifier import EmotionClassifier
 from modules.rag.chains import get_RAG_chain
 from modules.language_detection.language_detector import LanguageDetector
 
