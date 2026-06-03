@@ -2,9 +2,14 @@ python-dotenv
 datasets
 scikit-learn
 transformers
+transformers[torch]
 qdrant-client
 langchain
 langchain-groq
 langchain_qdrant
 langchain_huggingface
 pydantic_settings
+groq
+instructor
+tensorflow
+fastapi

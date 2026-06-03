@@ -3,9 +3,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-from helpers.config import get_settings
-from database import get_retriever
-from prompts import MENTAL_HEALTH_SYSTEM_PROMPT
+from modules.rag.helpers.config import get_settings
+from modules.rag.database import get_retriever
+from modules.rag.prompts import MENTAL_HEALTH_SYSTEM_PROMPT
 
 settings = get_settings()
 
@@ -31,7 +31,7 @@ def format_docs(docs):
 
     return formatted_context
 
-def get_mental_health_chain():
+def get_RAG_chain():
     retriever = get_retriever()
 
     llm = ChatGroq(
@@ -59,7 +59,7 @@ def get_mental_health_chain():
 if __name__ == "__main__":
     try:
         print("Constructing RAG Chain and testing a live query on Groq...")
-        chain = get_mental_health_chain()
+        chain = get_RAG_chain()
         
         test_query = "I am feeling extremely anxious and hopeless because of my growing debts. What should I do?"
         print(f"\n🗣️ User: {test_query}")

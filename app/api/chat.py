@@ -1,28 +1,35 @@
-'''Fast API endpoint. NO AI Logic.. Just call the orchestrator'''
+from fastapi import APIRouter, HTTPException
+from app.schemas.requests import ChatRequest
+from app.schemas.responses import ChatResponse
+from app.services.orchestrator import QueryHandler
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from src.routes import chat
-from src.helpers.config import get_settings
-settings = get_settings()
-app = FastAPI(
-    title="Financial Mental Health Chatbot API",
-    description="Production-ready RAG API with Standard Root Architecture",
-    version="1.0.0"
+router = APIRouter(
+    prefix="/api",
+    tags=["Chat"]
 )
 
+# Instantiate the FlowOrchestrator once on startup to pre-load the models
+try:
+    query_handler = QueryHandler()
+except Exception as e:
+    # We will log the error but not crash import time, so that uvicorn can load and show startup logs
+    print(f"Error loading QueryHandler: {e}")
+    query_handler = None
 
+@router.post("/chat", response_model=ChatResponse)
+async def chat_endpoint(request: ChatRequest):
+    if not request.message.strip():
+        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    
+    if query_handler is None:
+        raise HTTPException(
+            status_code=500,
+            detail="System is not fully initialized. Please check that GROQ_API_KEY is configured in the environment."
+        )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.include_router(chat.router)
-
-@app.get("/health", tags=["System"])
-async def health_check():
-    return {"status": "healthy", "model": settings.GROQ_MODEL_NAME, "vector_store": "qdrant"}
+    try:
+        result = query_handler.process_query(request.message)
+        return ChatResponse(**result)
+    except Exception as e:
+        print(f"Error processing query in chat endpoint: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

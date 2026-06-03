@@ -2,7 +2,7 @@ import asyncio
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from modules.rag.chains import get_mental_health_chain
+from modules.rag.chains import get_RAG_chain
 
 router = APIRouter(
     prefix="/api",
@@ -11,7 +11,7 @@ router = APIRouter(
 
 try:
     print("[Router] Initializing RAG Chain components for Chat Route...")
-    rag_chain = get_mental_health_chain()
+    rag_chain = get_RAG_chain()
     print("[Router] Chat AI Chain loaded successfully!")
 except Exception as e:
     print(f"[Router] Failed to initialize RAG Chain: {str(e)}")
