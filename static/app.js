@@ -6,6 +6,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatHistory = document.getElementById("chat-history");
     const sendBtn = document.getElementById("send-btn");
 
+    // Maintain conversational chat session ID
+    let chatSessionId = localStorage.getItem("chat_session_id");
+    if (!chatSessionId) {
+        chatSessionId = 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        localStorage.setItem("chat_session_id", chatSessionId);
+    }
+
     // Initialize Theme
     const savedTheme = localStorage.getItem("theme") || "dark";
     htmlElement.setAttribute("data-theme", savedTheme);
@@ -61,7 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ message: messageText })
+                body: JSON.stringify({
+                    message: messageText,
+                    session_id: chatSessionId
+                })
             });
 
             removeElement(typingIndicator);
@@ -193,6 +203,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="badge badge-emotion">
                         ${emoji} Emotion: ${capitalize(data.emotion)} (${confidencePct}%)
                     </span>
+                    <span class="badge badge-intent">
+                        🧠 Intent: ${formatIntent(data.intent)}
+                    </span>
                     <span class="badge badge-lang">
                         🌐 Language: ${capitalize(data.language)}
                     </span>
@@ -267,6 +280,16 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
         chatHistory.appendChild(row);
+    }
+
+    // Helper: Format intent name
+    function formatIntent(intent) {
+        if (!intent) return "General";
+        return intent
+            .replace(/_/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     }
 
     // Helper: Capitalize String

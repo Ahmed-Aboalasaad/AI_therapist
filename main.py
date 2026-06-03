@@ -1,15 +1,26 @@
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables first before importing any app modules
+load_dotenv(Path(__file__).resolve().parent / ".env")
+
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("app.log", encoding="utf-8")
+    ]
+)
 
 from app.api.chat import router as chat_router
 from app.api.test_endpoints import router as test_router
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from pathlib import Path
-
-load_dotenv(Path(__file__).resolve().parent / ".env")
 
 app = FastAPI(
     title="AI Therapist Chat Flow API",

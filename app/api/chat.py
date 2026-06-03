@@ -28,7 +28,7 @@ async def chat_endpoint(request: ChatRequest):
         )
 
     try:
-        result = query_handler.process_query(request.message)
+        result = query_handler.process_query(request.message, session_id=request.session_id)
         return ChatResponse(**result)
     except Exception as e:
         print(f"Error processing query in chat endpoint: {e}")

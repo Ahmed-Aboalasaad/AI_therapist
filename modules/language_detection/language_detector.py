@@ -13,10 +13,10 @@ class LanguageDetector():
             return
 
         from pathlib import Path
+        import joblib
         model_name="char_n-Gram_svm.joblib"
         model_path = Path(__file__).parent / "models" / model_name
-        if model_path.is_file():
-            import joblib
+        if model_path.exists():
             self.pipeline = joblib.load(model_path)
         else:
             from sklearn.pipeline import Pipeline
@@ -39,6 +39,7 @@ class LanguageDetector():
             texts = dataset['train']['text']
             labels = dataset['train']['labels']
         self.pipeline.fit(texts, labels)
+        print("Training finished.")
 
     def predict(self, texts):
         return self.pipeline.predict(list(texts))
