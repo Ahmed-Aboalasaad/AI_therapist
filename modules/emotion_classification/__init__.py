@@ -5,7 +5,7 @@ BATCH_SIZE = 32
 EPOCHS_LSTM = 10
 EPOCHS_BERT = 3
 RANDOM_STATE = 42
-MODEL_PATH = "/home/sharaf/Desktop/NLP Project/emotion_classifier/emotion_classifier/saved_model"
+MODEL_PATH = "ahmedsharaf/emotion-classifier"
 MAX_LENGTH = 128
 
 EMOTION_MAP = {

@@ -40,4 +40,4 @@ class LanguageDetectionTestRequest(BaseModel):
     text: str = Field(..., description="Text to detect the language of.")
 
 class LanguageDetectionTestResponse(BaseModel):
-    detected_language: str = Field(..., description="The detected language.")
+    language: str = Field(..., description="The detected language.")

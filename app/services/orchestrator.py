@@ -35,9 +35,7 @@ class QueryHandler:
         # --------------------------------------------------
         # Step 1.1: Detect Language
         # --------------------------------------------------
-        logger.info(
-            f"Detecting language"
-        )
+        logger.info(f"Detecting language")
         try:
             lang = self.language_detector.predict([query])
             detected_code = lang[0]
@@ -66,7 +64,7 @@ class QueryHandler:
         emotion_res = self.emotion_classifier.predict(query)
         emotion = emotion_res["emotion"]
         emotion_confidence = emotion_res["confidence"]
-        logger.log(f"Emotion: {emotion} (confident: {emotion_confidence:.2f})%")
+        logger.info(f"Emotion: {emotion} (confident: {emotion_confidence:.2f})%")
 
 
         # --------------------------------------------------

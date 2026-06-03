@@ -10,25 +10,25 @@ router = APIRouter(
 
 # Instantiate the FlowOrchestrator once on startup to pre-load the models
 try:
-    orchestrator = QueryHandler()
+    query_handler = QueryHandler()
 except Exception as e:
     # We will log the error but not crash import time, so that uvicorn can load and show startup logs
-    print(f"Error loading FlowOrchestrator: {e}")
-    orchestrator = None
+    print(f"Error loading QueryHandler: {e}")
+    query_handler = None
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     if not request.message.strip():
         raise HTTPException(status_code=400, detail="Message cannot be empty")
     
-    if orchestrator is None:
+    if query_handler is None:
         raise HTTPException(
             status_code=500,
             detail="System is not fully initialized. Please check that GROQ_API_KEY is configured in the environment."
         )
 
     try:
-        result = orchestrator.process_query(request.message)
+        result = query_handler.process_query(request.message)
         return ChatResponse(**result)
     except Exception as e:
         print(f"Error processing query in chat endpoint: {e}")

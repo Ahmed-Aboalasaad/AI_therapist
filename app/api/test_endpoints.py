@@ -8,8 +8,8 @@ from app.schemas.testing import (
     LanguageDetectionTestRequest, LanguageDetectionTestResponse
 )
 from modules.translation.translator import GroqTranslator
-from modules.intent_classifier.intent_classifier import classify_user_intent
-from modules.emotion_classifier.classifier import EmotionClassifier
+from modules.intent_classification.intent_classifier import classify_user_intent
+from modules.emotion_classification.emotion_classifier import EmotionClassifier
 from modules.rag.database import get_retriever
 from modules.language_detection.language_detector import LanguageDetector
 
@@ -121,7 +121,7 @@ async def test_language_detection(request: LanguageDetectionTestRequest):
         res = language_detector.predict([request.text])
         detected_lang = res[0] if len(res) > 0 else "unknown"
         return LanguageDetectionTestResponse(
-            detected_language=str(detected_lang)
+            language=str(detected_lang)
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Language detection failed: {str(e)}")

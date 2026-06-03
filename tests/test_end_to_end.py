@@ -72,7 +72,7 @@ def test_orchestrator_flow():
          
          print("\n================ TEST RESULTS ================")
          print(f"Original Query:          أنا حزين وقلق جدا")
-         print(f"Detected Language:       {result['detected_language']}")
+         print(f"Language:       {result['language']}")
          print(f"English Query Translation: {result['english_query']}")
          print(f"Detected Emotion:        {result['emotion']} (confidence: {result['emotion_confidence']})")
          print(f"Detected Intent:         {result['intent']}")
@@ -80,7 +80,7 @@ def test_orchestrator_flow():
          print(f"Final translated response: {result['response']}")
          print("==============================================\n")
          
-         assert result['detected_language'] == "Arabic"
+         assert result['language'] == "Arabic"
          assert result['intent'] == "asking_mental_health_question"
          assert result['emotion'] == "sadness" # Classified by local emotion model
          assert result['response'] == mock_translate_back_response

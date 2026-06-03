@@ -33,21 +33,21 @@ def test_language_detection_api():
     response = client.post("/api/test/language-detection", json={"text": "Hello this is a test"})
     assert response.status_code == 200, f"Expected 200, got {response.status_code}. Response: {response.text}"
     data = response.json()
-    assert data["detected_language"] == "en", f"Expected 'en', got {data['detected_language']}"
+    assert data["language"] == "en", f"Expected 'en', got {data['language']}"
     print("English detection: PASS")
 
     # 2. Test Arabic
     response = client.post("/api/test/language-detection", json={"text": "أنا حزين وأشعر بالقلق"})
     assert response.status_code == 200, f"Expected 200, got {response.status_code}. Response: {response.text}"
     data = response.json()
-    assert data["detected_language"] == "ar", f"Expected 'ar', got {data['detected_language']}"
+    assert data["language"] == "ar", f"Expected 'ar', got {data['language']}"
     print("Arabic detection: PASS")
 
     # 3. Test Spanish
     response = client.post("/api/test/language-detection", json={"text": "Hola a todos, cómo están?"})
     assert response.status_code == 200, f"Expected 200, got {response.status_code}. Response: {response.text}"
     data = response.json()
-    assert data["detected_language"] == "es", f"Expected 'es', got {data['detected_language']}"
+    assert data["language"] == "es", f"Expected 'es', got {data['language']}"
     print("Spanish detection: PASS")
 
 if __name__ == "__main__":

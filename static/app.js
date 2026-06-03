@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${emoji} Emotion: ${capitalize(data.emotion)} (${confidencePct}%)
                     </span>
                     <span class="badge badge-lang">
-                        🌐 Language: ${capitalize(data.detected_language)}
+                        🌐 Language: ${capitalize(data.language)}
                     </span>
                 </div>
         `;

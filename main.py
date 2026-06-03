@@ -1,15 +1,15 @@
 import os
+
+from app.api.chat import router as chat_router
+from app.api.test_endpoints import router as test_router
 from dotenv import load_dotenv
-
-# Load environmental variables from the .env file in the root
-load_dotenv()
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from app.api.chat import router as chat_router
-from app.api.test_endpoints import router as test_router
+from pathlib import Path
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 app = FastAPI(
     title="AI Therapist Chat Flow API",

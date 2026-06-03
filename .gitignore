@@ -33,6 +33,7 @@ htmlcov/
 .env.local
 
 # Databases and Models (large files)
+notebooks/results/
 models/
 qdrant_db/
 *.joblib

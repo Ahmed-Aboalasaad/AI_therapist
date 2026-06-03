@@ -7,7 +7,7 @@ class ReferenceItem(BaseModel):
 
 class ChatResponse(BaseModel):
     response: str = Field(..., description="The final response in the user's original language.")
-    detected_language: str = Field(..., description="The language detected from the user's input.")
+    language: str = Field(..., description="The language detected from the user's input.")
     intent: str = Field(..., description="The classified intent of the user's query.")
     emotion: str = Field(..., description="The classified emotion of the user's query.")
     emotion_confidence: float = Field(..., description="The confidence score of the emotion classification.")
