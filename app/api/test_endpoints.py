@@ -5,12 +5,14 @@ from app.schemas.testing import (
     IntentTestRequest, IntentTestResponse,
     EmotionTestRequest, EmotionTestResponse,
     RagTestRequest, RagTestResponse,
-    LanguageDetectionTestRequest, LanguageDetectionTestResponse
+    LanguageDetectionTestRequest, LanguageDetectionTestResponse,
+    LlmTestRequest, LlmTestResponse
 )
 from modules.translation.translator import GroqTranslator
 from modules.intent_classification.intent_classifier import classify_user_intent
 from modules.emotion_classification.emotion_classifier import EmotionClassifier
 from modules.rag.database import get_retriever
+from modules.rag.chains import get_mental_health_chain
 from modules.language_detection.language_detector import LanguageDetector
 
 router = APIRouter(
@@ -125,3 +127,37 @@ async def test_language_detection(request: LanguageDetectionTestRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Language detection failed: {str(e)}")
+
+@router.post("/llm", response_model=LlmTestResponse)
+async def test_llm(request: LlmTestRequest):
+    try:
+        from app.services.orchestrator import format_chat_history
+        from langchain_core.chat_history import InMemoryChatMessageHistory
+        from app.api.chat import query_handler
+        
+        if query_handler and request.session_id in query_handler.session_store:
+            history = query_handler.session_store[request.session_id]
+        else:
+            history = InMemoryChatMessageHistory()
+
+        chat_history_dicts = []
+        for msg in history.messages:
+            role = "user" if msg.type == "human" else "assistant"
+            chat_history_dicts.append({"role": role, "content": msg.content})
+
+        formatted_history = format_chat_history(chat_history_dicts)
+
+        chain = get_mental_health_chain(request.intent)
+        input_data = {
+            "prompt": request.prompt,
+            "emotion": request.emotion,
+            "language": request.language or "English",
+            "chat_history": formatted_history
+        }
+        if request.intent == "asking_mental_health_question":
+            input_data["context"] = request.context or "No clinical context is required for this interaction."
+
+        res = chain.invoke(input_data)
+        return LlmTestResponse(response=res)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"LLM chain invocation failed: {str(e)}")

@@ -23,6 +23,10 @@
     --badge-lang-text: #1d4ed8;
     --badge-lang-border: transparent;
     
+    --badge-intent-bg: #f5f3ff;
+    --badge-intent-text: #6d28d9;
+    --badge-intent-border: transparent;
+    
     --shadow-color: rgba(99, 91, 255, 0.05);
 }
 
@@ -50,6 +54,9 @@
     --badge-lang-bg: transparent;
     --badge-lang-text: #3b82f6;
     --badge-lang-border: rgba(59, 130, 246, 0.3);
+    --badge-intent-bg: transparent;
+    --badge-intent-text: #a78bfa;
+    --badge-intent-border: rgba(167, 139, 250, 0.3);
     
     --shadow-color: rgba(0, 0, 0, 0.4);
 }
@@ -319,6 +326,12 @@ body, html {
     background: var(--badge-lang-bg);
     color: var(--badge-lang-text);
     border-color: var(--badge-lang-border);
+}
+
+.badge-intent {
+    background: var(--badge-intent-bg);
+    color: var(--badge-intent-text);
+    border-color: var(--badge-intent-border);
 }
 
 /* Typing Indicator */
