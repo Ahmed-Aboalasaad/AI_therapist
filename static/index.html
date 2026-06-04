@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MindSupport - Mental Health Assistant</title>
+    <title>AI Therapist - Multilingual Mental Health Assistant</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,54 +19,119 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app-container">
-      <!-- Sidebar Ambient Decor (hidden on mobile) -->
-      <div class="ambient-decor"></div>
+    <!-- Background fireflies / floating blobs for high creativity -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
 
-      <!-- Main Chat Wrapper -->
-      <div class="chat-wrapper">
-        <!-- Header -->
+    <!-- Full-screen Dashboard Container -->
+    <div class="dashboard-container">
+      
+      <!-- Panel 1: Left Navigation Sidebar -->
+      <aside class="sidebar-left">
+        <div class="logo-area">
+          <div class="logo-icon">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="logo-text">AI Therapist</span>
+        </div>
+        
+        <nav class="nav-menu">
+          <span class="nav-label">Navigation</span>
+          <ul>
+            <li>
+              <a href="#" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item active">
+                <i class="fa-solid fa-comments"></i>
+                <span>AI Therapist Chat</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Journal</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item">
+                <i class="fa-solid fa-heart"></i>
+                <span>Resources</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Progress</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="nav-item">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        
+        <!-- User Profile Footer -->
+        <div class="sidebar-footer">
+          <div class="profile-avatar-generic">
+            <i class="fa-solid fa-circle-user"></i>
+          </div>
+          <div class="profile-info">
+            <span id="user-profile-name" class="profile-name">Guest</span>
+            <span class="profile-role">Session User</span>
+          </div>
+          <button
+            id="theme-toggle"
+            class="theme-toggle-btn"
+            aria-label="Toggle Theme"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Panel 2: Central Chat Panel -->
+      <main class="chat-wrapper">
         <header class="app-header">
-          <div class="logo-area">
-            <div class="logo-icon">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-                <path
-                  d="M12 6V18M8 8H16M9 12H15M10 16H14"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+          <div class="therapist-info">
+            <div class="therapist-avatar-generic">
+              <i class="fa-solid fa-user-doctor"></i>
             </div>
-            <div class="logo-text">
-              <h1>Ai Therapist</h1>
-              <p>Mental Health Assistant</p>
+            <div class="therapist-status-wrapper">
+              <span class="therapist-name">AI Therapist</span>
+              <span class="therapist-status">Active • Online Support</span>
             </div>
           </div>
           <div class="header-actions">
+            <!-- Sidebar toggle helper on mobile -->
             <button
-              id="theme-toggle"
-              class="btn-icon"
-              aria-label="Toggle Theme"
+              id="mobile-sidebar-toggle"
+              class="btn-icon mobile-only"
+              aria-label="Toggle Sidebar"
             >
-              <i class="fa-solid fa-moon"></i>
+              <i class="fa-solid fa-bars"></i>
             </button>
           </div>
         </header>
 
         <!-- Chat Message Area -->
-        <main class="chat-history" id="chat-history">
+        <div class="chat-history" id="chat-history">
+          <!-- Dynamic Welcoming Gradient Banner -->
+          <div class="welcome-gradient-banner">
+            <h2>Welcome to AI Therapist ✨</h2>
+            <p id="welcome-banner-text">
+              A safe, confidential space to find emotional support and mental clarity. 
+              Take a slow, deep breath, and express your thoughts freely in Arabic or English.
+            </p>
+          </div>
+
           <div class="date-divider">Today</div>
 
           <!-- Welcome Message -->
@@ -76,58 +141,200 @@
             </div>
             <div class="message-card-wrapper">
               <div class="message-card">
-                <p>
-                  Hello! I am Ai Therapist, your supportive mental health
-                  assistant. How can I help you support your emotional or mental
-                  well-being today?
-                </p>
+                <div class="response-text">
+                  <p>
+                    Hello! I am AI Therapist, your supportive mental
+                    health assistant. How can I support your emotional or mental
+                    well-being today? Feel free to write in Arabic or English.
+                  </p>
+                </div>
               </div>
               <div class="message-meta">
                 <span class="timestamp" id="welcome-timestamp">10:00 AM</span>
               </div>
             </div>
           </div>
-        </main>
+        </div>
 
         <!-- Input Area -->
         <footer class="chat-input-area">
           <form id="chat-form" class="chat-form">
+            <button
+              type="button"
+              class="btn-input-accessory"
+              aria-label="Attach File"
+            >
+              <i class="fa-solid fa-plus"></i>
+            </button>
             <input
               type="text"
               id="message-input"
-              placeholder="Type your message..."
+              placeholder="Share your thoughts..."
               autocomplete="off"
               required
             />
+            <button
+              type="button"
+              class="btn-input-accessory"
+              aria-label="Emoji Picker"
+            >
+              <i class="fa-regular fa-face-smile"></i>
+            </button>
+            <button
+              type="button"
+              class="btn-input-accessory"
+              aria-label="Voice Input"
+            >
+              <i class="fa-solid fa-microphone"></i>
+            </button>
             <button
               type="submit"
               id="send-btn"
               class="btn-send"
               aria-label="Send Message"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <i class="fa-solid fa-paper-plane"></i>
             </button>
           </form>
           <div class="disclaimer-text">
-            This is not a substitute for professional help. If you are in
-            crisis, please seek immediate assistance.
+            This is not a substitute for professional clinical help. If you are
+            in crisis, please seek immediate assistance.
           </div>
         </footer>
-      </div>
+      </main>
+
+      <!-- Panel 3: Right Insights Sidebar -->
+      <aside class="sidebar-right">
+        <h2 class="sidebar-right-title">Insights & Progress</h2>
+
+        <!-- Detected Intent Widget -->
+        <div class="widget-card">
+          <h3 class="widget-title">Today's Insights</h3>
+
+          <div class="insight-item">
+            <span class="insight-label">Detected Intent</span>
+            <div class="intent-badge-wrapper">
+              <span id="detected-intent-val" class="intent-badge"
+                >Greeting</span
+              >
+            </div>
+          </div>
+
+          <div class="insight-item">
+            <span class="insight-label">Stress Management</span>
+            <div class="progress-bar-container">
+              <div
+                class="progress-bar-fill"
+                style="
+                  width: 76%;
+                  background: linear-gradient(90deg, #3b82f6, #635bff);
+                "
+              ></div>
+            </div>
+            <div class="progress-val-text">76%</div>
+          </div>
+        </div>
+
+        <!-- Emotion Classification Widget -->
+        <div class="widget-card">
+          <h3 class="widget-title">Emotion Classification</h3>
+
+          <!-- Emotion Bars -->
+          <div class="emotion-bar-item">
+            <div class="emotion-bar-info">
+              <span class="emotion-name">Sadness</span>
+              <span id="sadness-pct" class="emotion-value">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div
+                id="sadness-bar"
+                class="progress-bar-fill"
+                style="width: 0%; background: #ef4444"
+              ></div>
+            </div>
+          </div>
+
+          <div class="emotion-bar-item">
+            <div class="emotion-bar-info">
+              <span class="emotion-name">Anxiety</span>
+              <span id="anxiety-pct" class="emotion-value">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div
+                id="anxiety-bar"
+                class="progress-bar-fill"
+                style="width: 0%; background: #f59e0b"
+              ></div>
+            </div>
+          </div>
+
+          <div class="emotion-bar-item">
+            <div class="emotion-bar-info">
+              <span class="emotion-name">Fatigue</span>
+              <span id="fatigue-pct" class="emotion-value">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div
+                id="fatigue-bar"
+                class="progress-bar-fill"
+                style="width: 0%; background: #10b981"
+              ></div>
+            </div>
+          </div>
+
+          <div class="emotion-bar-item">
+            <div class="emotion-bar-info">
+              <span class="emotion-name">Joy</span>
+              <span id="joy-pct" class="emotion-value">0%</span>
+            </div>
+            <div class="progress-bar-container">
+              <div
+                id="joy-bar"
+                class="progress-bar-fill"
+                style="width: 0%; background: #635bff"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Mood Chart Widget -->
+        <div class="widget-card">
+          <div class="widget-title-flex">
+            <h3 class="widget-title">Mood Score Trend</h3>
+            <span id="mood-score-val" class="mood-score-badge">78</span>
+          </div>
+
+          <div class="chart-wrapper-small">
+            <svg class="mood-svg-chart" viewBox="0 0 100 40">
+              <defs>
+                <linearGradient id="chart-glow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#635bff" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#635bff" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+              <path
+                id="mood-chart-area"
+                d="M 0 40 L 0 30 L 20 25 L 40 32 L 60 20 L 80 15 L 100 12 L 100 40 Z"
+                fill="url(#chart-glow)"
+              ></path>
+              <path
+                id="mood-chart-line"
+                d="M 0 30 L 20 25 L 40 32 L 60 20 L 80 15 L 100 12"
+                fill="none"
+                stroke="#635bff"
+                stroke-width="1.5"
+              ></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Daily Mindfulness Quote Card -->
+        <div class="widget-card mindfulness-card">
+          <h3 class="widget-title"><i class="fa-solid fa-feather-pointed"></i> Daily Mindfulness</h3>
+          <p class="mindfulness-quote">"Quiet the mind and the soul will speak. Breathing in, I calm body and mind. Breathing out, I smile."</p>
+        </div>
+      </aside>
+
     </div>
 
     <!-- Scripts -->

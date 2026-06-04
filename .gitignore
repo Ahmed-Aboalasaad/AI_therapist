@@ -1,46 +1,58 @@
-# Virtual environment
-.venv/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
 venv/
 ENV/
 env/
-shared_dev_env/
-myenv/
+enviroments/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Jupyter Notebooks checkpoints
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/*
-
-# IDE and OS files
-.vscode/
+# IDEs and editors
 .idea/
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+.vscode/
 *.swp
+*.swo
 
-# Environment variables (secrets)
+# Local configuration and logs
 .env
-.env.local
-
-# Databases and Models (large files)
-notebooks/results/
-models/
-qdrant_db/
-*.joblib
-*.pkl
-*.pb
-*.h5
-
-# Local logs and run caches
+app.log
 *.log
+
+# Saved models and heavy weights
+app/assets/models/
+app/assets/embeddings/
+app/assets/emotion/
+app/assets/intent/
+app/assets/language/
+
+saved_model/
+saved_models/
+models/
+.cache/
+.pytest_cache/

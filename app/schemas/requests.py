@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict
+from typing import Optional
 
 class ChatRequest(BaseModel):
     message: str = Field(..., description="The message/query sent by the user.")

@@ -4,7 +4,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatForm = document.getElementById("chat-form");
     const messageInput = document.getElementById("message-input");
     const chatHistory = document.getElementById("chat-history");
-    const sendBtn = document.getElementById("send-btn");
+
+    // Get User Name from prompt dialog on page load
+    let userName = localStorage.getItem("user_name");
+    if (!userName) {
+        userName = prompt("Welcome to AI Therapist! Please enter your name:", "Guest");
+        if (!userName || !userName.trim()) {
+            userName = "Guest";
+        }
+        localStorage.setItem("user_name", userName);
+    }
+
+    // Update username elements in UI
+    const userProfileNameEl = document.getElementById("user-profile-name");
+    if (userProfileNameEl) {
+        userProfileNameEl.textContent = userName;
+    }
+    const welcomeBannerText = document.getElementById("welcome-banner-text");
+    if (welcomeBannerText) {
+        welcomeBannerText.innerHTML = `Welcome, <strong>${escapeHtml(userName)}</strong>! A safe, confidential space to find emotional support and mental clarity. Take a slow, deep breath, and express your thoughts freely in Arabic or English.`;
+    }
 
     // Maintain conversational chat session ID
     let chatSessionId = localStorage.getItem("chat_session_id");
@@ -23,6 +42,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (welcomeTimestamp) {
         welcomeTimestamp.textContent = formatTime(new Date());
     }
+
+    // Historical Mood Scores for the SVG line chart
+    let moodScores = [50, 58, 48, 62, 70];
+    updateMoodChart();
+
+    // Mindfulness Quotes rotation
+    const MINDFULNESS_QUOTES = [
+        "\"Quiet the mind and the soul will speak. Breathing in, I calm body and mind. Breathing out, I smile.\"",
+        "\"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor.\"",
+        "\"You don't have to control your thoughts. You just have to stop letting them control you.\"",
+        "\"Do not dwell in the past, do not dream of the future, concentrate the mind on the present moment.\"",
+        "\"The present moment is filled with joy and happiness. If you are attentive, you will see it.\"",
+        "\"Breathe in experience, breathe out poetry. You are doing the best you can.\""
+    ];
 
     // Theme Toggle Handler
     themeToggle.addEventListener("click", () => {
@@ -62,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 3. Call API
         try {
-            // API connection endpoint URL /api/chat
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: {
@@ -83,8 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
             
-            // 4. Add Bot Response
+            // 4. Add Bot Response to Chat History
             addBotMessage(data);
+
+            // 5. Dynamically update right-hand Insights Panel
+            updateInsightsPanel(data);
+
+            // 6. Rotate Mindfulness quote
+            rotateMindfulnessQuote();
 
         } catch (error) {
             removeElement(typingIndicator);
@@ -100,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let minutes = date.getMinutes();
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
         minutes = minutes < 10 ? '0' + minutes : minutes;
         return `${hours}:${minutes} ${ampm}`;
     }
@@ -110,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
-    // Helper: Remove element with fade-out
+    // Helper: Remove element
     function removeElement(element) {
         if (element && element.parentNode) {
             element.remove();
@@ -181,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const emoji = emotionEmoji[data.emotion.toLowerCase()] || "🤖";
         const confidencePct = Math.round(data.emotion_confidence * 100);
 
-        // Set marked options for GFM and auto-linebreaks
+        // Set marked options for breaks
         if (typeof marked !== 'undefined') {
             marked.setOptions({
                 breaks: true,
@@ -212,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
         `;
 
-        // If references are available, add a togglable references drawer
+        // If references are available, add references drawer
         if (data.references && data.references.length > 0) {
             contentHtml += `
                 <div class="references-wrapper">
@@ -249,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         chatHistory.appendChild(row);
 
-        // Wire up toggle logic for references drawer if it exists
+        // Wire up toggle logic for references drawer
         const refHeader = row.querySelector(".references-header");
         if (refHeader) {
             const refContent = row.querySelector(".references-content");
@@ -280,6 +318,125 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
         `;
         chatHistory.appendChild(row);
+    }
+
+    // Dynamically Update Insights Panel
+    function updateInsightsPanel(data) {
+        // Update Detected Intent
+        const intentEl = document.getElementById("detected-intent-val");
+        if (intentEl) {
+            intentEl.textContent = formatIntent(data.intent);
+        }
+
+        // Calculate emotion percentages based on API response
+        let sadness = 10;
+        let anxiety = 15;
+        let fatigue = 20;
+        let joy = 12;
+
+        const currentEmotion = data.emotion.toLowerCase();
+        const confVal = Math.round(data.emotion_confidence * 100);
+
+        if (currentEmotion === "sadness") {
+            sadness = confVal;
+            anxiety = Math.round(confVal * 0.7);
+            fatigue = Math.round(confVal * 0.8);
+            joy = Math.round(100 - confVal);
+        } else if (currentEmotion === "fear" || currentEmotion === "anxiety" || currentEmotion === "anger") {
+            anxiety = confVal;
+            sadness = Math.round(confVal * 0.6);
+            fatigue = Math.round(confVal * 0.7);
+            joy = Math.round(100 - confVal);
+        } else if (currentEmotion === "joy" || currentEmotion === "love" || currentEmotion === "surprise") {
+            joy = confVal;
+            sadness = Math.max(5, Math.round(100 - confVal * 1.2));
+            anxiety = Math.max(8, Math.round(100 - confVal * 1.1));
+            fatigue = Math.max(10, Math.round(100 - confVal * 0.9));
+        }
+
+        // Clip values between 2% and 100
+        sadness = Math.max(2, Math.min(100, sadness));
+        anxiety = Math.max(2, Math.min(100, anxiety));
+        fatigue = Math.max(2, Math.min(100, fatigue));
+        joy = Math.max(2, Math.min(100, joy));
+
+        // Update progress bars
+        setProgressBar("sadness", sadness);
+        setProgressBar("anxiety", anxiety);
+        setProgressBar("fatigue", fatigue);
+        setProgressBar("joy", joy);
+
+        // Update Mood Score Trend
+        let delta = 0;
+        if (currentEmotion === "joy" || currentEmotion === "love") delta = 8;
+        else if (currentEmotion === "neutral") delta = 1;
+        else if (currentEmotion === "surprise") delta = 3;
+        else delta = -7;
+
+        let currentMood = moodScores[moodScores.length - 1] + delta;
+        currentMood = Math.max(15, Math.min(99, currentMood));
+        
+        moodScores.push(currentMood);
+        if (moodScores.length > 6) {
+            moodScores.shift();
+        }
+
+        const moodBadge = document.getElementById("mood-score-val");
+        if (moodBadge) {
+            moodBadge.textContent = currentMood;
+            if (currentMood >= 70) {
+                moodBadge.style.color = "#10b981";
+                moodBadge.style.background = "rgba(16, 185, 129, 0.1)";
+            } else if (currentMood >= 45) {
+                moodBadge.style.color = "#f59e0b";
+                moodBadge.style.background = "rgba(245, 158, 11, 0.1)";
+            } else {
+                moodBadge.style.color = "#ef4444";
+                moodBadge.style.background = "rgba(239, 68, 68, 0.1)";
+            }
+        }
+
+        updateMoodChart();
+    }
+
+    function setProgressBar(id, value) {
+        const pctEl = document.getElementById(`${id}-pct`);
+        const barEl = document.getElementById(`${id}-bar`);
+        if (pctEl) pctEl.textContent = `${value}%`;
+        if (barEl) barEl.style.width = `${value}%`;
+    }
+
+    // Dynamic SVG line charting helper
+    function updateMoodChart() {
+        const chartArea = document.getElementById("mood-chart-area");
+        const chartLine = document.getElementById("mood-chart-line");
+        if (!chartArea || !chartLine) return;
+
+        const xStep = 20;
+        const points = moodScores.map((score, idx) => {
+            const x = idx * xStep;
+            const y = 38 - (score / 100) * 33;
+            return { x, y };
+        });
+
+        const linePath = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(" ");
+        chartLine.setAttribute("d", linePath);
+
+        const areaPath = `${linePath} L 100 40 L 0 40 Z`;
+        chartArea.setAttribute("d", areaPath);
+    }
+
+    // Rotate mindfulness quote card
+    function rotateMindfulnessQuote() {
+        const quoteEl = document.querySelector(".mindfulness-quote");
+        if (quoteEl) {
+            const randomQuote = MINDFULNESS_QUOTES[Math.floor(Math.random() * MINDFULNESS_QUOTES.length)];
+            quoteEl.style.opacity = 0;
+            setTimeout(() => {
+                quoteEl.textContent = randomQuote;
+                quoteEl.style.opacity = 1;
+            }, 250);
+        }
     }
 
     // Helper: Format intent name

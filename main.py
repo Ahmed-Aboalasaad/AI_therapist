@@ -2,29 +2,23 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables first before importing any app modules
-load_dotenv(Path(__file__).resolve().parent / ".env")
+# Resolve root path and load environment variables before importing any app modules
+ROOT_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
 
-import logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("app.log", encoding="utf-8")
-    ]
-)
-
-from app.api.chat import router as chat_router
-from app.api.test_endpoints import router as test_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+
+from app.core.logging import setup_logging
+from app.api.routes.chat import router as chat_router
+
+# Setup centralized logging
+setup_logging()
 
 app = FastAPI(
     title="AI Therapist Chat Flow API",
-    description="Full-flow mental health support chatbot API incorporating Groq translation, intent/emotion classification, and Qdrant RAG.",
+    description="Restructured clean-architecture mental health support chatbot API incorporating translation, classification, and Qdrant RAG.",
     version="1.0.0"
 )
 
@@ -36,19 +30,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the routers
+# Include the restructured router
 app.include_router(chat_router)
-app.include_router(test_router)
-
-# Mount the static files directory directly at the root /
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 @app.get("/health", tags=["System"])
 async def health_check():
     return {
         "status": "healthy",
-        "description": "AI Therapist Flow System is online."
+        "description": "AI Therapist Restructured Flow System is online."
     }
+
+# Mount the static files directory at the root /
+# Must be mounted AFTER all other API endpoints to avoid shadowing them
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
