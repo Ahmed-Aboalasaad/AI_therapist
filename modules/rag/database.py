@@ -30,7 +30,7 @@ def get_retriever():
     vector_store = get_vector_store()
 
     retriever = vector_store.as_retriever(
-        search_type="similarity_score_threshold",
+        search_type="mmr",
         search_kwargs={
             "k": 2,              
             "score_threshold": 0.70  
