@@ -48,7 +48,7 @@ def get_mental_health_chain(intent: str = "asking_mental_health_question"):
         groq_api_key=settings.GROQ_API_KEY,
         model=settings.GROQ_MODEL_NAME, 
         temperature=0.4,
-        max_tokens=500
+        max_tokens=1500
     )
 
     template = MENTAL_HEALTH_SYSTEM_PROMPT if intent == "asking_mental_health_question" else GENERAL_SYSTEM_PROMPT
