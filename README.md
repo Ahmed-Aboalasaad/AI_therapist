@@ -134,7 +134,9 @@ All weights (language detection SVM, emotion classifier, sentence embeddings) wi
 
 ## 👥 The Team
 
-* **Ahmed Aboalasaad** - Lead AI Software Architect & NLP Specialist
-  * *Responsibilities*: Design and implementation of the clean architecture flow, intent detection models, and pipeline orchestration.
+## Contributors
 
-*(Feel free to list additional collaborators here!)*
+- [Ahmed Aboalasaad](https://github.com/Ahmed-Aboalasaad)
+- [Ahmed Sharaf](https://github.com/ahmed-m-sharaf)
+- [Marwan Ragab](https://github.com/MarwanRagab123)
+- [Mohammed Safa](https://github.com/Mohammedsafa)
