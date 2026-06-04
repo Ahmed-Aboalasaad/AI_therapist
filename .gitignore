@@ -4,6 +4,7 @@ venv/
 ENV/
 env/
 shared_dev_env/
+myenv/
 
 # Python cache
 __pycache__/

@@ -13,3 +13,4 @@ groq
 instructor
 tensorflow
 fastapi
+uvicorn
