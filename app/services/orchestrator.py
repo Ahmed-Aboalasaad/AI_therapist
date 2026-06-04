@@ -151,7 +151,8 @@ class QueryHandler:
             "prompt": query,
             "emotion": emotion,
             "language": language,
-            "chat_history": formatted_history
+            "chat_history": formatted_history,
+            "intent": intent
         }
         if intent == "asking_mental_health_question":
             input_data["context"] = context
